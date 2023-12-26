@@ -1,0 +1,8 @@
+.leaflet-popup-content-wrapper {
+  width: max-content;
+  border: solid 1px gray;
+  padding: 10px 1px 10px 1px;
+  border-radius: 12px;
+  background-color: rgba(207, 207, 207, 0.5);
+  backdrop-filter: blur(5px);
+}
