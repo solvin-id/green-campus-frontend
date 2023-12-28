@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import '@/dist/html5-qrcode.min.css'
+// import '@/dist/html5-qrcode.min.css'
 import { mapActions } from 'vuex'
 import { Html5QrcodeScanner, Html5QrcodeScanType } from 'html5-qrcode'
 export default {
