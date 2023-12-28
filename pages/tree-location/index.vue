@@ -74,7 +74,7 @@
         </div>
       </section>
       <section
-        class="absolute z-50 bottom-0 w-full bg-white drop-shadow-[0_35px_35px_rgba(0,0,0,1)] px-10 py-5 rounded rounded-t-[50px] bg-blend-saturation flex flex-col gap-y-2"
+        class="fixed z-50 bottom-0 w-full bg-white drop-shadow-[0_35px_35px_rgba(0,0,0,1)] px-10 py-5 rounded rounded-t-[50px] bg-blend-saturation flex flex-col gap-y-2"
       >
         <span class="paragraph">Pilih Kampus:</span>
         <div class="flex justify-between text-white">
