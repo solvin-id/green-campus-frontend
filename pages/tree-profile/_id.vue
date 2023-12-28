@@ -6,14 +6,13 @@
     >
       <section class="order-2 px-[30px] mt-[70px] sm:w-screen">
         <h1 class="heading1 text-[32px]">
-          Pohon {{ id }}
+          {{ treeName }}
         </h1>
         <p class="paragraph">
-          Nama Ilmiah Pohon jeruk
+          Nama Ilmiah: <span class="font-semibold">{{ sciName }}</span>
         </p>
         <p class="paragraph">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque illo
-          veniam nam aliquam ipsa fugiat, magnam cupiditate explicabo et ipsum?
+          {{ desc }}
         </p>
         <button
           class="mt-10 text-center w-full bg-[#7E7E7E] text-white text-lg p-4 mb-5 rounded-lg"
@@ -67,24 +66,52 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'TreeProfile',
+  middleware: 'requireScan',
+  async asyncData ({ params, $axios }) {
+    try {
+      // Ambil ID dari parameter URL
+      const treeId = params.id
+
+      // Panggil API untuk mendapatkan data berdasarkan ID
+      const apiUrl = `https://green-campus-backend.vercel.app/api/tree/verify/${treeId}`
+      const response = await $axios.get(apiUrl)
+
+      // Kembalikan data yang diinginkan
+      console.log(response.data.data.name)
+      return {
+        treeName: response.data.data.name,
+        sciName: response.data.data.sciName,
+        desc: response.data.data.description
+        // Tambahkan data lainnya yang ingin ditampilkan
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+      // Handle error jika diperlukan
+    }
+  },
   data () {
     return {
       isLargeScreen: false,
       isMediumScreen: false,
-      isSmallScreen: false,
-      id: null
+      isSmallScreen: false
     }
   },
+  computed: {
+    ...mapState('tree', ['validTreeSlugs'])
+  },
+
   mounted () {
-    this.id = this.$route.params.id
     this.handleResize()
     window.addEventListener('resize', this.handleResize)
   },
+
   beforeDestroy () {
     window.removeEventListener('resize', this.handleResize)
   },
+
   methods: {
     handleResize () {
       this.isLargeScreen = window.innerWidth >= 1024

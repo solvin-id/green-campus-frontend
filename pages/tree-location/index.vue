@@ -1,6 +1,9 @@
 <template>
   <div>
     <div id="map-wrap" class="h-screen relative sm:hidden">
+      <!-- <div v-for="treeLocation in treeLocations" :key="treeLocation.id">
+        <p>{{ treeLocation.description }}</p>
+      </div> -->
       <client-only>
         <l-map
           :zoom="18"
@@ -9,67 +12,34 @@
         >
           <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png" />
 
-          //ANCHOR - Mangga
-          <l-marker :lat-lng="[-7.833461704838198, 110.38324415567656]">
-            <l-popup class="">
+          <l-marker
+            v-for="treeLocation in treeLocations"
+            :key="treeLocation.id"
+            :lat-lng="[treeLocation.lat, treeLocation.lng]"
+          >
+            <l-popup>
               <div>
                 <section class="flex gap-2 items-center">
                   <h1 class="heading1 text-[14px] min-w-max">
-                    Pohon Mangga
+                    {{ treeLocation.tree.name }}
                   </h1>
                   <h2
                     class="heading1 text-[12px] items-center border-l-2 border-black pl-2"
                   >
-                    Nama Ilimiah..
+                    {{ treeLocation.tree.sciName }}
                   </h2>
                 </section>
                 <section class="mt-2 flex gap-4">
                   <div class="flex flex-col gap-y-1">
-                    <span class="paragraph">Pohon berada di:</span>
-                    <span class="paragraph">1. Sebelah timur kolam ikan</span>
-                    <span class="paragraph">2. Pohon menjulang tinggi</span>
-                    <span class="paragraph">3. Berada dipaling ujung timur</span>
+                    <p>{{ treeLocation.description }}</p>
                   </div>
+                  <!-- <img :src="treeLocation.tree.image" class="w-40"> -->
                   <img src="@/assets/img/image-tree.svg" class="w-40">
                 </section>
                 <button
                   type="button"
                   class="px-[52px] py-[5px] paragraph bg-[#7E7E7E] rounded-md text-white items-center"
-                  @click="scanQRCode('Mangga')"
-                >
-                  Pilih
-                </button>
-              </div>
-            </l-popup>
-          </l-marker>
-
-          //ANCHOR - Jeruk
-          <l-marker :lat-lng="[-7.833509426168886, 110.38288136900373]">
-            <l-popup class="">
-              <div>
-                <section class="flex gap-2 items-center">
-                  <h1 class="heading1 text-[14px] min-w-max">
-                    Pohon Jeruk
-                  </h1>
-                  <h2
-                    class="heading1 text-[12px] items-center border-l-2 border-black pl-2"
-                  >
-                    Nama Ilimiah..
-                  </h2>
-                </section>
-                <section class="mt-2 flex gap-4">
-                  <div class="flex flex-col gap-y-1">
-                    <span class="paragraph">Pohon berada di:</span>
-                    <span class="paragraph">1. Sebelah timur kolam ikan</span>
-                    <span class="paragraph">2. Pohon menjulang tinggi</span>
-                    <span class="paragraph">3. Berada dipaling ujung timur</span>
-                  </div>
-                  <img src="@/assets/img/image-tree.svg" class="w-40">
-                </section>
-                <button
-                  type="button"
-                  class="px-[52px] py-[5px] paragraph bg-[#7E7E7E] rounded-md text-white items-center"
-                  @click="scanQRCode('Jeruk')"
+                  @click="scanQRCode()"
                 >
                   Pilih
                 </button>
@@ -79,7 +49,7 @@
         </l-map>
       </client-only>
       <section
-        class="w-full z-50 fixed top-2 right-2 flex gap-2 justify-end items-center"
+        class="z-50 fixed top-2 right-2 flex gap-2 justify-end items-center"
       >
         <button
           class="bg-[#7E7E7E] rounded-full max-w-max h-max p-1 shadow-lg"
@@ -137,16 +107,34 @@
 
 <script>
 import '~/assets/css/leaflet-popup-styles.css'
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
 export default {
   name: 'TreeLocation',
 
+  computed: {
+    ...mapGetters('tree', ['getTree']),
+    ...mapState('location', ['treeLocations'])
+  },
+
+  mounted () {
+    this.getAllTree()
+    // this.scanQRCode()
+    const treeLocationIds = [1, 2, 3]
+    this.getAllTreeLocations(treeLocationIds)
+  },
+
   methods: {
+    ...mapMutations('tree', ['setScannedTreeId', 'setScannedTreeData']),
+    ...mapActions('tree', ['getAllTree']),
+    ...mapActions('location', ['getAllTreeLocations']),
+
     backOneStep () {
       // Gantilah ini dengan ID yang diperoleh dari pemindaian QR Code
       this.$router.back()
     },
-    scanQRCode (treeId) {
-      this.$router.push(`/tree-profile/${treeId}`)
+    scanQRCode () {
+      // this.$router.push(`/tree-profile/${treeId}`)
+      this.$router.push('/verify/goScan')
     }
   }
 }

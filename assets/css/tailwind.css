@@ -16,6 +16,17 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'press';
+  src: url('https://fonts.googleapis.com/css2?family=Montez&family=Press+Start+2P&display=swap');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.headingBarcode {
+  font-family: press;
+}
+
 .heading1 {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-weight: 600;
